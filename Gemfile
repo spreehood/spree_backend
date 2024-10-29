@@ -19,6 +19,8 @@ gem "jbuilder"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
+gem "sprockets-rails"
+gem "mini_racer", platforms: %i[ ruby jruby ] # fixes Could not find a JavaScript runtime. See https://github.com/rails/execjs for a list of available runtimes. (ExecJS::RuntimeUnavailable) in Docker env
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
@@ -38,7 +40,7 @@ gem "kamal", require: false
 gem "thruster", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-# gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 1.2"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -61,3 +63,13 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem 'spree', '~> 4.10.1'
+gem 'spree_core', '~> 4.10.1'
+gem 'spree_api', '~> 4.10.1'
+gem 'spree_sample', '~> 4.10.1'
+gem 'spree_emails', '~> 4.10.1'
+gem 'spree_backend', '~> 4.8.0'
+gem 'spree_auth_devise', '~> 4.6.0'
+gem 'spree_i18n', '~> 5.3.0'
+gem 'spree_dev_tools', require: false, group: %w[test development]
