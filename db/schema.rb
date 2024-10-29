@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_29_132912) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_29_164643) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -144,6 +144,16 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_132912) do
     t.index ["position"], name: "index_spree_assets_on_position"
     t.index ["viewable_id"], name: "index_assets_on_viewable_id"
     t.index ["viewable_type", "type"], name: "index_assets_on_viewable_type_and_type"
+  end
+
+  create_table "spree_authentication_methods", id: :serial, force: :cascade do |t|
+    t.string "environment"
+    t.string "provider"
+    t.string "api_key"
+    t.string "api_secret"
+    t.boolean "active"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "spree_calculators", force: :cascade do |t|
@@ -1452,6 +1462,16 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_132912) do
     t.index ["active"], name: "index_spree_trackers_on_active"
   end
 
+  create_table "spree_user_authentications", id: :serial, force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "provider"
+    t.string "uid"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.index ["uid", "provider"], name: "index_spree_user_authentications_on_uid_and_provider", unique: true
+    t.index ["user_id"], name: "index_spree_user_authentications_on_user_id"
+  end
+
   create_table "spree_users", force: :cascade do |t|
     t.string "encrypted_password", limit: 128
     t.string "password_salt", limit: 128
@@ -1614,4 +1634,5 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_132912) do
   add_foreign_key "spree_store_translations", "spree_stores"
   add_foreign_key "spree_taxon_translations", "spree_taxons"
   add_foreign_key "spree_taxonomy_translations", "spree_taxonomies"
+  add_foreign_key "spree_user_authentications", "spree_users", column: "user_id"
 end

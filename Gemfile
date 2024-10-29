@@ -89,6 +89,8 @@ gem 'spree_auth_devise', '~> 4.6.0'
 gem 'spree_i18n', '~> 5.3.0'
 gem 'spree_dev_tools', require: false, group: %w[test development]
 
+gem 'spree_social', github: 'spreehood/spree_social', branch: 'api-for-facebook-login'
+
 # Rack CORS Middleware
 gem 'rack-cors'
 
