@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_29_053395) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_29_132912) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -442,6 +442,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_053395) do
   end
 
   create_table "spree_option_type_translations", force: :cascade do |t|
+    t.string "name"
     t.string "presentation"
     t.string "locale", null: false
     t.bigint "spree_option_type_id", null: false
@@ -466,6 +467,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_053395) do
   end
 
   create_table "spree_option_value_translations", force: :cascade do |t|
+    t.string "name"
     t.string "presentation"
     t.string "locale", null: false
     t.bigint "spree_option_value_id", null: false
@@ -694,6 +696,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_053395) do
 
   create_table "spree_product_property_translations", force: :cascade do |t|
     t.string "value"
+    t.string "filter_param"
     t.string "locale", null: false
     t.bigint "spree_product_property_id", null: false
     t.datetime "created_at", null: false
@@ -721,7 +724,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_053395) do
   end
 
   create_table "spree_products", force: :cascade do |t|
-    t.string "name", default: "", null: false
+    t.string "name", default: ""
     t.text "description"
     t.datetime "available_on", precision: nil
     t.datetime "deleted_at", precision: nil
@@ -871,7 +874,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_053395) do
 
   create_table "spree_properties", force: :cascade do |t|
     t.string "name"
-    t.string "presentation", null: false
+    t.string "presentation"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "filterable", default: false, null: false
@@ -894,7 +897,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_053395) do
   end
 
   create_table "spree_property_translations", force: :cascade do |t|
+    t.string "name"
     t.string "presentation"
+    t.string "filter_param"
     t.string "locale", null: false
     t.bigint "spree_property_id", null: false
     t.datetime "created_at", null: false
@@ -1162,9 +1167,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_053395) do
     t.datetime "deleted_at", precision: nil
     t.jsonb "public_metadata"
     t.jsonb "private_metadata"
+    t.index "stock_location_id, variant_id, COALESCE(deleted_at, '1970-01-01 00:00:00'::timestamp without time zone)", name: "stock_item_by_loc_var_id_deleted_at", unique: true
     t.index ["backorderable"], name: "index_spree_stock_items_on_backorderable"
     t.index ["deleted_at"], name: "index_spree_stock_items_on_deleted_at"
-    t.index ["stock_location_id", "variant_id", "deleted_at"], name: "stock_item_by_loc_var_id_deleted_at", unique: true
     t.index ["stock_location_id", "variant_id"], name: "stock_item_by_loc_and_var_id"
     t.index ["stock_location_id"], name: "index_spree_stock_items_on_stock_location_id"
     t.index ["variant_id", "stock_location_id"], name: "index_spree_stock_items_unique_without_deleted_at", unique: true, where: "(deleted_at IS NULL)"
@@ -1378,13 +1383,14 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_053395) do
     t.string "meta_keywords"
     t.string "permalink"
     t.string "pretty_name"
+    t.index ["locale", "permalink"], name: "unique_permalink_per_locale", unique: true
     t.index ["locale"], name: "index_spree_taxon_translations_on_locale"
     t.index ["pretty_name"], name: "index_spree_taxon_translations_on_pretty_name"
     t.index ["spree_taxon_id", "locale"], name: "index_spree_taxon_translations_on_spree_taxon_id_and_locale", unique: true
   end
 
   create_table "spree_taxonomies", force: :cascade do |t|
-    t.string "name", null: false
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "position", default: 0
@@ -1409,7 +1415,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_053395) do
   create_table "spree_taxons", force: :cascade do |t|
     t.bigint "parent_id"
     t.integer "position", default: 0
-    t.string "name", null: false
+    t.string "name"
     t.string "permalink"
     t.bigint "taxonomy_id"
     t.bigint "lft"

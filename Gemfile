@@ -30,6 +30,8 @@ gem "solid_cache"
 gem "solid_queue"
 gem "solid_cable"
 
+gem "mission_control-jobs"
+
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
@@ -49,19 +51,32 @@ group :development, :test do
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "brakeman", require: false
 
+  gem 'listen'
+
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  gem 'rspec_junit_formatter'
+
+  # monitoring
+  gem 'rack-mini-profiler', require: false
+  gem 'flamegraph'
+  gem 'stackprof'
+  gem 'memory_profiler'
+
+  gem 'webmock'
 end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+
+  gem 'letter_opener'
 end
 
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
-  gem "capybara"
-  gem "selenium-webdriver"
+  gem 'vcr'
 end
 
 gem 'spree', '~> 4.10.1'
@@ -73,3 +88,24 @@ gem 'spree_backend', '~> 4.8.0'
 gem 'spree_auth_devise', '~> 4.6.0'
 gem 'spree_i18n', '~> 5.3.0'
 gem 'spree_dev_tools', require: false, group: %w[test development]
+
+# Rack CORS Middleware
+gem 'rack-cors'
+
+# SendGrid
+gem 'sendgrid-actionmailer'
+
+# logging
+gem 'remote_syslog_logger'
+
+gem 'activerecord-nulldb-adapter'
+
+# file uploades & assets
+gem 'aws-sdk-s3', require: false
+
+gem 'multi_json'
+
+# improved JSON rendering performance
+gem 'oj'
+
+gem 'mini_magick'
