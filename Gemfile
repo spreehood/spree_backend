@@ -91,6 +91,13 @@ gem 'spree_dev_tools', require: false, group: %w[test development]
 
 gem 'spree_social', github: 'spreehood/spree_social', branch: 'api-for-facebook-login'
 
+gem 'spree_gateways_nepal', github: 'spreehood/spree_gateways_nepal', branch: 'feature/khalti-integration'
+
+gem 'spree_stripe_express_checkout', github: 'spreehood/spree_stripe_express_checkout', branch: 'feature/express_checkout'
+
+# gem 'spree_multi_vendor', github: 'spreehood/spree_multi_vendor', branch: 'fix/shipping_methods_fix_in_vendors'
+gem 'spree_slider', github: 'spreehood/spree_slider', branch: '2024'
+
 # Rack CORS Middleware
 gem 'rack-cors'
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_29_164643) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_29_165551) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -323,6 +323,37 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_164643) do
     t.index ["original_return_item_id"], name: "index_spree_inventory_units_on_original_return_item_id"
     t.index ["shipment_id"], name: "index_inventory_units_on_shipment_id"
     t.index ["variant_id"], name: "index_inventory_units_on_variant_id"
+  end
+
+  create_table "spree_khalti_payment_sources", force: :cascade do |t|
+    t.string "khalti_payment_token_id"
+    t.string "khalti_payment_type_id"
+    t.string "khalti_payment_type_name"
+    t.string "payment_state_id"
+    t.string "payment_state_name"
+    t.string "payment_state_template"
+    t.float "amount"
+    t.float "fee_amount"
+    t.boolean "refunded"
+    t.datetime "created_on", precision: nil
+    t.string "ebanker"
+    t.string "khalti_user_id"
+    t.string "khalti_user_name"
+    t.string "khalti_user_email"
+    t.string "khalti_user_mobile"
+    t.string "khalti_merchant_id"
+    t.string "khalti_merchant_name"
+    t.string "khalti_merchant_email"
+    t.string "khalti_merchant_mobile"
+    t.integer "payment_method_id"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "pidx"
+    t.integer "total_amount"
+    t.string "status"
+    t.integer "transaction_id"
+    t.integer "fee"
   end
 
   create_table "spree_line_items", force: :cascade do |t|
@@ -1348,6 +1379,14 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_164643) do
     t.index ["default"], name: "index_spree_stores_on_default"
     t.index ["deleted_at"], name: "index_spree_stores_on_deleted_at"
     t.index ["url"], name: "index_spree_stores_on_url"
+  end
+
+  create_table "spree_stripe_express_checkout_sources", force: :cascade do |t|
+    t.string "payment_intent_id"
+    t.string "payment_intent_secret"
+    t.integer "payment_method_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "spree_tax_categories", force: :cascade do |t|
