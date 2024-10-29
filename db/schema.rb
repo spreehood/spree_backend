@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_29_165551) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_29_171730) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -169,6 +169,25 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_165551) do
     t.index ["id", "type"], name: "index_spree_calculators_on_id_and_type"
   end
 
+  create_table "spree_checks", force: :cascade do |t|
+    t.bigint "payment_method_id"
+    t.bigint "user_id"
+    t.string "account_holder_name"
+    t.string "account_holder_type"
+    t.string "routing_number"
+    t.string "account_number"
+    t.string "account_type", default: "checking"
+    t.string "status"
+    t.string "last_digits"
+    t.string "gateway_customer_profile_id"
+    t.string "gateway_payment_profile_id"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "deleted_at", precision: nil
+    t.index ["payment_method_id"], name: "index_spree_checks_on_payment_method_id"
+    t.index ["user_id"], name: "index_spree_checks_on_user_id"
+  end
+
   create_table "spree_cms_pages", force: :cascade do |t|
     t.string "title", null: false
     t.string "meta_title"
@@ -290,6 +309,38 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_165551) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["variant_id"], name: "index_spree_digitals_on_variant_id"
+  end
+
+  create_table "spree_display_products", id: :serial, force: :cascade do |t|
+    t.integer "product_id"
+    t.integer "display_id"
+    t.string "video_url"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+  end
+
+  create_table "spree_displays", id: :serial, force: :cascade do |t|
+    t.string "name"
+    t.string "screen_size"
+    t.string "orientation"
+    t.string "display_type"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.integer "products_array", default: [], array: true
+    t.boolean "active", default: false, null: false
+    t.integer "vendor_id"
+  end
+
+  create_table "spree_feedback_reviews", id: :serial, force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "review_id", null: false
+    t.integer "rating", default: 0
+    t.text "comment"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.string "locale", default: "en"
+    t.index ["review_id"], name: "index_spree_feedback_reviews_on_review_id"
+    t.index ["user_id"], name: "index_spree_feedback_reviews_on_user_id"
   end
 
   create_table "spree_gateways", force: :cascade do |t|
@@ -542,6 +593,17 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_165551) do
     t.index ["position"], name: "index_spree_option_values_on_position"
   end
 
+  create_table "spree_order_commissions", id: :serial, force: :cascade do |t|
+    t.bigint "order_id"
+    t.bigint "vendor_id"
+    t.float "amount"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.index ["order_id", "vendor_id"], name: "index_spree_order_commissions_on_order_id_and_vendor_id", unique: true
+    t.index ["order_id"], name: "index_spree_order_commissions_on_order_id"
+    t.index ["vendor_id"], name: "index_spree_order_commissions_on_vendor_id"
+  end
+
   create_table "spree_order_promotions", force: :cascade do |t|
     t.bigint "order_id"
     t.bigint "promotion_id"
@@ -593,6 +655,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_165551) do
     t.jsonb "public_metadata"
     t.jsonb "private_metadata"
     t.text "internal_note"
+    t.bigint "vendor_id"
     t.index ["approver_id"], name: "index_spree_orders_on_approver_id"
     t.index ["bill_address_id"], name: "index_spree_orders_on_bill_address_id"
     t.index ["canceler_id"], name: "index_spree_orders_on_canceler_id"
@@ -631,6 +694,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_165551) do
     t.jsonb "private_metadata"
     t.jsonb "settings"
     t.index ["id", "type"], name: "index_spree_payment_methods_on_id_and_type"
+    t.index ["id"], name: "index_spree_payment_methods_on_id"
   end
 
   create_table "spree_payment_methods_stores", id: false, force: :cascade do |t|
@@ -672,6 +736,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_165551) do
     t.string "cvv_response_message"
     t.jsonb "public_metadata"
     t.jsonb "private_metadata"
+    t.string "intent_client_key"
     t.index ["number"], name: "index_spree_payments_on_number", unique: true
     t.index ["order_id"], name: "index_spree_payments_on_order_id"
     t.index ["payment_method_id"], name: "index_spree_payments_on_payment_method_id"
@@ -697,6 +762,15 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_165551) do
     t.index ["deleted_at"], name: "index_spree_prices_on_deleted_at"
     t.index ["variant_id", "currency"], name: "index_spree_prices_on_variant_id_and_currency"
     t.index ["variant_id"], name: "index_spree_prices_on_variant_id"
+  end
+
+  create_table "spree_product_answers", id: :serial, force: :cascade do |t|
+    t.integer "product_question_id"
+    t.integer "user_id"
+    t.text "content"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.index ["product_question_id"], name: "index_spree_product_answers_on_product_question_id"
   end
 
   create_table "spree_product_option_types", force: :cascade do |t|
@@ -746,6 +820,19 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_165551) do
     t.index ["spree_product_property_id", "locale"], name: "unique_product_property_id_per_locale", unique: true
   end
 
+  create_table "spree_product_questions", id: :serial, force: :cascade do |t|
+    t.integer "product_id"
+    t.integer "user_id"
+    t.text "content"
+    t.boolean "is_visible", default: false
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.boolean "is_anonymous", default: false
+    t.string "email"
+    t.string "full_name"
+    t.index ["product_id"], name: "index_spree_product_questions_on_product_id"
+  end
+
   create_table "spree_product_translations", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -762,6 +849,27 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_165551) do
     t.index ["locale", "slug"], name: "unique_slug_per_locale", unique: true
     t.index ["locale"], name: "index_spree_product_translations_on_locale"
     t.index ["spree_product_id", "locale"], name: "unique_product_id_per_locale", unique: true
+  end
+
+  create_table "spree_product_video_taggings", id: :serial, force: :cascade do |t|
+    t.integer "product_video_id"
+    t.integer "product_video_tag_id"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.index ["product_video_id", "product_video_tag_id"], name: "index_spree_pv_taggings_on_pv_id_and_pt_id", unique: true
+  end
+
+  create_table "spree_product_video_tags", id: :serial, force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+  end
+
+  create_table "spree_product_videos", id: :serial, force: :cascade do |t|
+    t.integer "product_id"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.index ["product_id"], name: "index_spree_product_videos_on_product_id"
   end
 
   create_table "spree_products", force: :cascade do |t|
@@ -783,6 +891,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_165551) do
     t.jsonb "private_metadata"
     t.string "status", default: "draft", null: false
     t.datetime "make_active_at", precision: nil
+    t.decimal "avg_rating", precision: 7, scale: 5, default: "0.0", null: false
+    t.integer "reviews_count", default: 0, null: false
+    t.bigint "vendor_id"
     t.index ["available_on"], name: "index_spree_products_on_available_on"
     t.index ["deleted_at"], name: "index_spree_products_on_deleted_at"
     t.index ["discontinue_on"], name: "index_spree_products_on_discontinue_on"
@@ -793,6 +904,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_165551) do
     t.index ["status", "deleted_at"], name: "index_spree_products_on_status_and_deleted_at"
     t.index ["status"], name: "index_spree_products_on_status"
     t.index ["tax_category_id"], name: "index_spree_products_on_tax_category_id"
+    t.index ["vendor_id"], name: "index_spree_products_on_vendor_id"
   end
 
   create_table "spree_products_stores", force: :cascade do |t|
@@ -1078,6 +1190,23 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_165551) do
     t.index ["return_authorization_id"], name: "index_spree_return_items_on_return_authorization_id"
   end
 
+  create_table "spree_reviews", id: :serial, force: :cascade do |t|
+    t.bigint "product_id"
+    t.string "name"
+    t.string "location"
+    t.integer "rating"
+    t.text "title"
+    t.text "review"
+    t.boolean "approved", default: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.bigint "user_id"
+    t.string "ip_address"
+    t.string "locale", default: "en"
+    t.boolean "show_identifier", default: true
+    t.index ["show_identifier"], name: "index_spree_reviews_on_show_identifier"
+  end
+
   create_table "spree_role_users", force: :cascade do |t|
     t.bigint "role_id"
     t.bigint "user_id"
@@ -1158,8 +1287,10 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_165551) do
     t.string "code"
     t.jsonb "public_metadata"
     t.jsonb "private_metadata"
+    t.bigint "vendor_id"
     t.index ["deleted_at"], name: "index_spree_shipping_methods_on_deleted_at"
     t.index ["tax_category_id"], name: "index_spree_shipping_methods_on_tax_category_id"
+    t.index ["vendor_id"], name: "index_spree_shipping_methods_on_vendor_id"
   end
 
   create_table "spree_shipping_rates", force: :cascade do |t|
@@ -1175,6 +1306,34 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_165551) do
     t.index ["shipment_id"], name: "index_spree_shipping_rates_on_shipment_id"
     t.index ["shipping_method_id"], name: "index_spree_shipping_rates_on_shipping_method_id"
     t.index ["tax_rate_id"], name: "index_spree_shipping_rates_on_tax_rate_id"
+  end
+
+  create_table "spree_slide_locations", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+  end
+
+  create_table "spree_slide_slide_locations", force: :cascade do |t|
+    t.bigint "slide_id"
+    t.bigint "slide_location_id"
+    t.index ["slide_id"], name: "index_spree_slide_slide_locations_on_slide_id"
+    t.index ["slide_location_id"], name: "index_spree_slide_slide_locations_on_slide_location_id"
+  end
+
+  create_table "spree_slides", force: :cascade do |t|
+    t.string "name"
+    t.text "body"
+    t.string "link_url"
+    t.boolean "published"
+    t.string "image_file_name"
+    t.string "image_content_type"
+    t.integer "image_file_size"
+    t.datetime "image_updated_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.integer "position", default: 0, null: false
+    t.integer "product_id"
   end
 
   create_table "spree_state_changes", force: :cascade do |t|
@@ -1235,12 +1394,14 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_165551) do
     t.boolean "propagate_all_variants", default: false
     t.string "admin_name"
     t.datetime "deleted_at", precision: nil
+    t.bigint "vendor_id"
     t.index ["active"], name: "index_spree_stock_locations_on_active"
     t.index ["backorderable_default"], name: "index_spree_stock_locations_on_backorderable_default"
     t.index ["country_id"], name: "index_spree_stock_locations_on_country_id"
     t.index ["deleted_at"], name: "index_spree_stock_locations_on_deleted_at"
     t.index ["propagate_all_variants"], name: "index_spree_stock_locations_on_propagate_all_variants"
     t.index ["state_id"], name: "index_spree_stock_locations_on_state_id"
+    t.index ["vendor_id"], name: "index_spree_stock_locations_on_vendor_id"
   end
 
   create_table "spree_stock_movements", force: :cascade do |t|
@@ -1575,6 +1736,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_165551) do
     t.string "barcode"
     t.string "weight_unit"
     t.string "dimensions_unit"
+    t.bigint "vendor_id"
     t.index ["barcode"], name: "index_spree_variants_on_barcode"
     t.index ["deleted_at"], name: "index_spree_variants_on_deleted_at"
     t.index ["discontinue_on"], name: "index_spree_variants_on_discontinue_on"
@@ -1584,6 +1746,46 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_165551) do
     t.index ["sku"], name: "index_spree_variants_on_sku"
     t.index ["tax_category_id"], name: "index_spree_variants_on_tax_category_id"
     t.index ["track_inventory"], name: "index_spree_variants_on_track_inventory"
+    t.index ["vendor_id"], name: "index_spree_variants_on_vendor_id"
+  end
+
+  create_table "spree_vendor_translations", force: :cascade do |t|
+    t.string "name"
+    t.text "about_us"
+    t.text "contact_us"
+    t.string "slug"
+    t.string "locale", null: false
+    t.bigint "spree_vendor_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["locale", "slug"], name: "vendor_unique_slug_per_locale", unique: true
+    t.index ["locale"], name: "index_spree_vendor_translations_on_locale"
+  end
+
+  create_table "spree_vendor_users", id: :serial, force: :cascade do |t|
+    t.bigint "vendor_id"
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_spree_vendor_users_on_user_id"
+    t.index ["vendor_id", "user_id"], name: "index_spree_vendor_users_on_vendor_id_and_user_id", unique: true
+    t.index ["vendor_id"], name: "index_spree_vendor_users_on_vendor_id"
+  end
+
+  create_table "spree_vendors", id: :serial, force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.string "state"
+    t.datetime "deleted_at", precision: nil
+    t.string "slug"
+    t.text "about_us"
+    t.text "contact_us"
+    t.float "commission_rate", default: 5.0
+    t.integer "priority"
+    t.string "notification_email"
+    t.index ["deleted_at"], name: "index_spree_vendors_on_deleted_at"
+    t.index ["name"], name: "index_spree_vendors_on_name", unique: true
+    t.index ["slug"], name: "index_spree_vendors_on_slug", unique: true
+    t.index ["state"], name: "index_spree_vendors_on_state"
   end
 
   create_table "spree_webhooks_events", force: :cascade do |t|
@@ -1669,9 +1871,11 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_29_165551) do
   add_foreign_key "spree_payment_sources", "spree_users", column: "user_id"
   add_foreign_key "spree_product_property_translations", "spree_product_properties"
   add_foreign_key "spree_product_translations", "spree_products"
+  add_foreign_key "spree_product_videos", "spree_products", column: "product_id"
   add_foreign_key "spree_property_translations", "spree_properties"
   add_foreign_key "spree_store_translations", "spree_stores"
   add_foreign_key "spree_taxon_translations", "spree_taxons"
   add_foreign_key "spree_taxonomy_translations", "spree_taxonomies"
   add_foreign_key "spree_user_authentications", "spree_users", column: "user_id"
+  add_foreign_key "spree_vendor_translations", "spree_vendors"
 end

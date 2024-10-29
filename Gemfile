@@ -95,8 +95,17 @@ gem 'spree_gateways_nepal', github: 'spreehood/spree_gateways_nepal', branch: 'f
 
 gem 'spree_stripe_express_checkout', github: 'spreehood/spree_stripe_express_checkout', branch: 'feature/express_checkout'
 
-# gem 'spree_multi_vendor', github: 'spreehood/spree_multi_vendor', branch: 'fix/shipping_methods_fix_in_vendors'
+gem 'spree_multi_vendor', github: 'spreehood/spree_multi_vendor', branch: 'fix/shipping_methods_fix_in_vendors'
+
 gem 'spree_slider', github: 'spreehood/spree_slider', branch: '2024'
+
+gem 'spree_products_qa', github: 'spreehood/spree_products_qa', branch: 'fix/vendor-questions-fetch'
+
+gem 'spree_reviews', github: 'spreehood/spree_reviews', branch: 'fix/vendor-reviews-fetch'
+
+gem 'spree_kiosk', github: 'spreehood/spree_kiosk', branch: 'feature/qr_for_display'
+
+gem 'spree_product_videos', github: 'spreehood/spree_product_videos', branch: 'fix/video-fetch-fixes'
 
 # Rack CORS Middleware
 gem 'rack-cors'

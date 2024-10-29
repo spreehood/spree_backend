@@ -11,6 +11,65 @@ GIT
       spree_gateway
 
 GIT
+  remote: https://github.com/spreehood/spree_kiosk.git
+  revision: 89d1cb7e3397d920eca8474bf6749ffad5cdb8ad
+  branch: feature/qr_for_display
+  specs:
+    spree_kiosk (0.0.1)
+      deface (~> 1.0)
+      rqrcode (~> 2.0)
+      spree_api (>= 4.5)
+      spree_backend (>= 4.5)
+      spree_core (>= 4.5)
+      spree_extension
+
+GIT
+  remote: https://github.com/spreehood/spree_multi_vendor.git
+  revision: 1405c83f2c035575e504ec03687c888deff70cd0
+  branch: fix/shipping_methods_fix_in_vendors
+  specs:
+    spree_multi_vendor (2.5.0)
+      deface (~> 1.0)
+      spree (>= 4.7.0)
+      spree_backend (>= 4.7.0)
+      spree_emails (>= 4.7.0)
+      spree_extension
+
+GIT
+  remote: https://github.com/spreehood/spree_product_videos.git
+  revision: f0b8b58da533977422b67e5ccb9b9a968984c7cb
+  branch: fix/video-fetch-fixes
+  specs:
+    spree_product_videos (0.0.1)
+      activerecord-import
+      deface (~> 1.0)
+      spree_api (>= 4.5)
+      spree_backend (>= 4.5)
+      spree_core (>= 4.5)
+      spree_extension
+
+GIT
+  remote: https://github.com/spreehood/spree_products_qa.git
+  revision: 687233ebb171798baffb4bcd8078c1b4b30d6929
+  branch: fix/vendor-questions-fetch
+  specs:
+    spree_products_qa (0.0.2)
+      spree (>= 4.7.0)
+      spree_extension
+
+GIT
+  remote: https://github.com/spreehood/spree_reviews.git
+  revision: d8b0817feefd674c29d13c6ebc549e73a54baa25
+  branch: fix/vendor-reviews-fetch
+  specs:
+    spree_reviews (4.0.0)
+      deface (~> 1.0)
+      spree_api (>= 4.5)
+      spree_backend (>= 4.5)
+      spree_core (>= 4.5)
+      spree_extension
+
+GIT
   remote: https://github.com/spreehood/spree_slider.git
   revision: 7554dca1429356589b98ba324a69a5781413cb95
   branch: 2024
@@ -118,6 +177,8 @@ GEM
       activemodel (= 8.0.0.rc1)
       activesupport (= 8.0.0.rc1)
       timeout (>= 0.4.0)
+    activerecord-import (1.8.1)
+      activerecord (>= 4.2)
     activerecord-nulldb-adapter (0.5.1)
       activerecord (>= 5.2.0)
     activerecord-typedstore (1.6.0)
@@ -231,6 +292,7 @@ GEM
       activesupport (>= 3.0.0)
     childprocess (5.1.0)
       logger (~> 1.5)
+    chunky_png (1.4.0)
     coderay (1.1.3)
     concurrent-ruby (1.3.4)
     connection_pool (2.4.1)
@@ -629,6 +691,10 @@ GEM
       actionpack (>= 5.2)
       railties (>= 5.2)
     rexml (3.3.9)
+    rqrcode (2.2.0)
+      chunky_png (~> 1.0)
+      rqrcode_core (~> 1.0)
+    rqrcode_core (1.2.0)
     rspec-activemodel-mocks (1.2.1)
       activemodel (>= 3.0)
       activesupport (>= 3.0)
@@ -985,6 +1051,11 @@ DEPENDENCIES
   spree_emails (~> 4.10.1)
   spree_gateways_nepal!
   spree_i18n (~> 5.3.0)
+  spree_kiosk!
+  spree_multi_vendor!
+  spree_product_videos!
+  spree_products_qa!
+  spree_reviews!
   spree_sample (~> 4.10.1)
   spree_slider!
   spree_social!
